@@ -6,7 +6,7 @@ import { AxiosResponse } from 'axios';
 export function getTransactions() {
   return new Promise<AxiosResponse<transaction[], any>>((resolve) => {
     TransactionsApi.get<transaction[]>('http://localhost:3000/api/transactions')
-      .then((data: AxiosResponse<transaction[], any>) => {
+      .then(data => {
         resolve(data);
       });
   });
