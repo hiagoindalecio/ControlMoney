@@ -6,3 +6,14 @@ export type transaction = {
   category: string,
   createdAt: Date
 }
+
+export type setTransaction = {
+  title: string,
+  value: string,
+  category: string,
+  type: string,
+}
+
+export type messageResponse = {
+  message: string,
+}

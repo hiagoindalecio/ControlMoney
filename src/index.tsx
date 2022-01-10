@@ -29,6 +29,11 @@ createServer({
         }
       ]
     });
+
+    this.post('/transactions', (schema, request) => {
+      const data = JSON.parse(request.requestBody);
+      return { message: `Transação ${data.title} salva com sucesso!` }
+    })
   }
 });
 
