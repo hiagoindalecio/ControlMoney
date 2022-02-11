@@ -6,9 +6,9 @@ import closeImg from '../../assets/close.svg';
 import incomeImg from '../../assets/income.svg';
 import outcomeImg from '../../assets/outcome.svg';
 
-import { setTransactions } from '../../services/transactionService';
+import { useTransactions } from '../../hooks/useTransactions';
 
-import { setTransaction } from '../../types';
+import { transaction } from '../../types';
 
 import { Container, TransactionTypeContainer, RadioBox } from './styles';
 
@@ -20,6 +20,8 @@ interface NewTransactionModalProps {
 }
 
 export function NewTransactionModal({ isOpen , onRequestClose }: NewTransactionModalProps) {
+  const { FindTransactions, CreateTransaction } = useTransactions();
+
   const formElement = useRef<HTMLFormElement>(null);
   const [type, setType] = useState('deposit');
 
@@ -27,15 +29,23 @@ export function NewTransactionModal({ isOpen , onRequestClose }: NewTransactionM
     e.preventDefault();
     if(formElement.current) {
       const form = formElement?.current;
-      const data: setTransaction = {
+      const data: transaction = {
+        id: 0,
         title: form['titulo'].value,
-        value: form['valor'].value,
-        category: form['categoria'].value,
+        ammount: Number(form['valor'].value),
         type: type,
+        category: form['categoria'].value,
+        createdAt: new Date(),
       };
-      const response = await setTransactions(data);
       
-      console.log(response);
+      CreateTransaction(data).then((creationResponse) => {
+        if (creationResponse.status === 201) {
+          FindTransactions();
+          onRequestClose();
+        } else {
+          alert(`Ocorreu um erro!\nTente novamente\n${creationResponse.statusText}`);
+        }
+      });
     }
   }
     

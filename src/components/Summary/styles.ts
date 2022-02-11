@@ -30,5 +30,10 @@ export const Container = styled.div`
       background: var(--green);
       color: #FFF;
     }
+
+    &.lowlight-background {
+      background: var(--red);
+      color: #FFF;
+    }
   }
 `;

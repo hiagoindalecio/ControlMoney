@@ -1,22 +1,9 @@
-import { useEffect, useState } from 'react';
-
 import { Container } from './styles';
 
-import { getTransactions } from '../../services/transactionService';
-
-import { transaction } from '../../types';
+import { useTransactions } from '../../hooks/useTransactions';
 
 export function TransactionTable() {
-  const [transactions, setTransactions] = useState<transaction[]>([]);
-
-  useEffect(() => {
-    getTransactions()
-      .then((transactions) => {
-        if(transactions.data.length > 0) {
-          setTransactions(transactions.data);
-        }
-      })
-  }, [])
+  const { transactions }= useTransactions();
 
   return (
     <Container>
@@ -35,9 +22,24 @@ export function TransactionTable() {
             transactions.map( transaction =>
               <tr key={transaction.id}>
                 <td>{transaction.title}</td>
-                <td className={transaction.type}>{transaction.type === 'withdraw' ? '- ' : ''}R${transaction.amount}</td>
+                <td className={transaction.type}>
+                {
+                  transaction.type === 'withdraw' ? '- ' : ''
+                }
+                {
+                  new Intl.NumberFormat('pt-BR', {
+                      style: 'currency',
+                      currency: 'BRL'
+                  }).format(transaction.ammount)
+                }
+                </td>
                 <td>{transaction.category}</td>
-                <td>{transaction.createdAt}</td>
+                <td>
+                {
+                  new Intl.DateTimeFormat('pt-BR')
+                  .format(new Date(transaction.createdAt))
+                }
+                </td>
               </tr>
             )
           }
